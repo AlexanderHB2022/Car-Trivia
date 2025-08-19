@@ -1,21 +1,21 @@
 import React from "react";
 
-export default function OptionsGrid({ options, onSelect, locked, selected, correctIndex }) {
+export default function OptionsGrid({ options, onPick, state }) {
   return (
-    <div key={options.join("-")} className="options-grid fade-in" role="group">
-      {options.map((opt, idx) => {
-        let state = "";
-        if (locked) {
-          if (idx === correctIndex) state = "is-correct pop";
-          else if (idx === selected) state = "is-incorrect shake";
+    <div key={options.join("-")} className="options-grid" role="group">
+      {options.map((opt, i) => {
+        let cls = "option-btn";
+        if (state.locked) {
+          if (i === state.correctIndex) cls += " is-correct";
+          else if (i === state.chosenIndex) cls += " is-incorrect";
         }
         return (
           <button
-            key={idx}
-            className={`option-btn ${state}`}
-            onClick={() => onSelect(idx)}
-            disabled={locked}
-            aria-pressed={selected === idx}
+            key={i}
+            className={cls}
+            disabled={state.locked}
+            onClick={() => onPick(i)}
+            aria-pressed={state.chosenIndex === i}
           >
             {opt}
           </button>

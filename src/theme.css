@@ -411,3 +411,109 @@ button:disabled {
     transition: none !important;
   }
 }
+
+/* === Car Trivia – UI refinements === */
+
+/* Contenedor vertical consistente */
+.game-container {
+  display: grid;
+  grid-template-rows: auto auto 1fr auto; /* meta/progreso | pregunta | opciones | navegación */
+  row-gap: clamp(12px, 2.2vw, 20px);
+  max-width: 720px;
+  margin-inline: auto;
+  padding-inline: clamp(12px, 2.2vw, 24px);
+}
+
+/* Pregunta con altura mínima estable para evitar saltos */
+.question-card {
+  min-height: clamp(96px, 14vh, 140px); /* 2–3 líneas */
+  display: grid;
+  align-content: center;
+  padding: clamp(12px, 2vw, 20px);
+  border-radius: var(--radius, 12px);
+  box-shadow: var(--shadow, 0 10px 24px rgba(0,0,0,.15));
+}
+
+/* Grilla de opciones uniforme */
+.options-grid {
+  display: grid;
+  gap: clamp(10px, 2vw, 16px);
+  grid-template-columns: 1fr; /* mobile */
+}
+@media (min-width: 640px) {
+  .options-grid { grid-template-columns: 1fr 1fr; }
+}
+
+/* Botones de opción con altura mínima uniforme */
+.option-btn {
+  min-height: 56px;
+  border-radius: var(--radius, 12px);
+  border: 1px solid var(--accent, rgba(255,255,255,.2));
+  transition: background-color .18s, color .18s, border-color .18s, transform .18s, box-shadow .18s;
+}
+
+/* Al bloquear la pregunta, desactiva interacción, PERO no apagues el color de estado */
+.option-btn:disabled { opacity: .6; cursor: default; }
+.option-btn.is-correct,
+.option-btn.is-incorrect {
+  opacity: 1;                 /* <- quita opacidad lavada */
+  color: var(--text-color, #fff);
+}
+.option-btn.is-correct {
+  background: var(--correct);
+  border-color: var(--correct);
+  animation: pop .18s ease-out;
+}
+.option-btn.is-incorrect {
+  background: var(--error, hsl(0 72% 55%));
+  border-color: var(--error, hsl(0 72% 55%));
+  animation: shake .24s linear;
+}
+
+/* Barra de progreso: 3 estados */
+.progress-dot { opacity: .5; }
+.progress-dot.is-current { opacity: 1; }
+.progress-dot.is-correct { background: var(--correct) !important; opacity: 1; }
+.progress-dot.is-incorrect { background: var(--error, hsl(0 72% 55%)) !important; opacity: 1; }
+.progress-dot.is-skipped { background: var(--present) !important; opacity: 1; }
+
+/* Navegación: 3 botones uniformes */
+.nav-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: clamp(10px, 2vw, 16px);
+  justify-items: center;
+}
+.nav-btn {
+  min-height: 44px;
+  padding: 10px 16px;
+  border-radius: var(--radius, 12px);
+  background: transparent;
+  border: 1px solid var(--accent, rgba(255,255,255,.25));
+  color: var(--text-color, #fff);
+  transition: background-color .18s, border-color .18s, box-shadow .18s, transform .18s;
+}
+.nav-btn:hover:not(:disabled) { transform: translateY(-1px); }
+.nav-btn:disabled { opacity: .5; }
+
+/* Emoji del TopBar: borde/outline, sin caja de fondo */
+.icon-btn {
+  background: transparent;
+  border: 1px solid var(--accent, rgba(255,255,255,.25));
+  border-radius: 999px;
+  padding: 8px;
+  box-shadow: none;
+}
+
+/* Animaciones sutiles */
+@keyframes pop { 0%{transform: scale(.98)} 100%{transform: scale(1)} }
+@keyframes shake {
+  0%{ transform: translateX(0) } 25%{ transform: translateX(-2px) }
+  50%{ transform: translateX(2px) } 75%{ transform: translateX(-2px) } 100%{ transform: translateX(0) }
+}
+
+/* Respeta reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  .option-btn, .nav-btn { transition: none; }
+  .option-btn.is-correct, .option-btn.is-incorrect { animation: none; }
+}

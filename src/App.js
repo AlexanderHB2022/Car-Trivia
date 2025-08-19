@@ -5,40 +5,46 @@ import QuestionCard from "./components/QuestionCard.js";
 import OptionsGrid from "./components/OptionsGrid.js";
 import ResultModal from "./components/ResultModal.js";
 import QuestionNavigation from "./components/QuestionNavigation.js";
-import useTrivia from "./game/useTrivia.js";
+import { useTrivia } from "./game/useTrivia.js";
 
 export default function App() {
   const {
-    question,
-    options,
-    pickOption,
-    locked,
-    selected,
-    correctIndex,
-    showResult,
-    score,
-    restart,
     current,
+    questionIndex,
     total,
+    optionsState,
+    pickOption,
     next,
     prev,
     skip,
-    status,
+    finished,
+    score,
+    restart,
+    handleKeyDown,
     canPrev,
     canNext,
     canSkip,
+    status,
   } = useTrivia();
+
+  React.useEffect(() => {
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  }, [handleKeyDown]);
 
   return (
     <GameLayout>
-      <TopBar title="Car Trivia" actionIcon="🔁" onAction={restart} />
-      <QuestionCard text={question} current={current} total={total} status={status} />
+      <TopBar title="Car Trivia" actionEmoji="🔁" onAction={restart} />
+      <QuestionCard
+        text={current.question}
+        current={questionIndex}
+        total={total}
+        status={status}
+      />
       <OptionsGrid
-        options={options}
-        onSelect={pickOption}
-        locked={locked}
-        selected={selected}
-        correctIndex={correctIndex}
+        options={current.options}
+        onPick={pickOption}
+        state={optionsState}
       />
       <QuestionNavigation
         onPrev={prev}
@@ -48,7 +54,7 @@ export default function App() {
         canSkip={canSkip}
         canNext={canNext}
       />
-      {showResult && <ResultModal score={score} onRestart={restart} />}
+      {finished && <ResultModal score={score} onRestart={restart} />}
     </GameLayout>
   );
 }
