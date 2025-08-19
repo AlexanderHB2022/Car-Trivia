@@ -12,6 +12,7 @@ export default function useTrivia() {
   const [locked, setLocked] = useState(false);
   const [selected, setSelected] = useState(null);
   const [showResult, setShowResult] = useState(false);
+  const [skipped, setSkipped] = useState([]);
 
   const currentQuestion = questions[current] || {};
   const correctIndex = currentQuestion.answerIndex;
@@ -25,24 +26,14 @@ export default function useTrivia() {
     setLocked(false);
     setSelected(null);
     setShowResult(false);
+    setSkipped([]);
   }, []);
 
   useEffect(() => {
     restart();
   }, [restart]);
 
-  const handleOption = useCallback(
-    (index) => {
-      if (locked) return;
-      setSelected(index);
-      setLocked(true);
-      if (index === correctIndex) setScore((s) => s + 1);
-    },
-    [locked, correctIndex]
-  );
-
   const next = useCallback(() => {
-    if (!locked) return;
     if (current + 1 >= questions.length) {
       setShowResult(true);
     } else {
@@ -50,7 +41,32 @@ export default function useTrivia() {
       setLocked(false);
       setSelected(null);
     }
-  }, [locked, current, questions.length]);
+  }, [current, questions.length]);
+
+  const prev = useCallback(() => {
+    if (current === 0) return;
+    setCurrent((c) => c - 1);
+    setLocked(false);
+    setSelected(null);
+  }, [current]);
+
+  const skip = useCallback(() => {
+    setSkipped((s) => [...s, current]);
+    next();
+  }, [current, next]);
+
+  const handleOption = useCallback(
+    (index) => {
+      if (locked) return;
+      setSelected(index);
+      setLocked(true);
+      if (index === correctIndex) {
+        setScore((s) => s + 1);
+        setTimeout(next, 800);
+      }
+    },
+    [locked, correctIndex, next]
+  );
 
   const closeModal = useCallback(() => setShowResult(false), []);
 
@@ -84,5 +100,9 @@ export default function useTrivia() {
     closeModal,
     current,
     total: questions.length,
+    next,
+    prev,
+    skip,
+    skipped,
   };
 }

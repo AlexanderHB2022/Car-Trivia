@@ -4,6 +4,7 @@ import TopBar from "./components/TopBar.js";
 import QuestionCard from "./components/QuestionCard.js";
 import OptionsGrid from "./components/OptionsGrid.js";
 import ResultModal from "./components/ResultModal.js";
+import QuestionNavigation from "./components/QuestionNavigation.js";
 import useTrivia from "./game/useTrivia.js";
 
 export default function App() {
@@ -19,6 +20,9 @@ export default function App() {
     restart,
     current,
     total,
+    next,
+    prev,
+    skip,
   } = useTrivia();
 
   return (
@@ -31,6 +35,14 @@ export default function App() {
         locked={locked}
         selected={selected}
         correctIndex={correctIndex}
+      />
+      <QuestionNavigation
+        onPrev={prev}
+        onNext={next}
+        onSkip={skip}
+        disablePrev={current === 0}
+        disableNext={current >= total - 1}
+        disableSkip={locked || current >= total - 1}
       />
       {showResult && <ResultModal score={score} onRestart={restart} />}
     </GameLayout>
