@@ -12,7 +12,8 @@ export default function useTrivia() {
   const [locked, setLocked] = useState(false);
   const [selected, setSelected] = useState(null);
   const [showResult, setShowResult] = useState(false);
-  const [skipped, setSkipped] = useState([]);
+  const [status, setStatus] = useState([]); // "pending" | "skipped" | "correct" | "incorrect"
+  const [answers, setAnswers] = useState([]);
 
   const currentQuestion = questions[current] || {};
   const correctIndex = currentQuestion.answerIndex;
@@ -26,7 +27,8 @@ export default function useTrivia() {
     setLocked(false);
     setSelected(null);
     setShowResult(false);
-    setSkipped([]);
+    setStatus(new Array(shuffled.length).fill("pending"));
+    setAnswers(new Array(shuffled.length).fill(null));
   }, []);
 
   useEffect(() => {
@@ -34,38 +36,58 @@ export default function useTrivia() {
   }, [restart]);
 
   const next = useCallback(() => {
+    if (status[current] === "pending") return false;
     if (current + 1 >= questions.length) {
       setShowResult(true);
     } else {
-      setCurrent((c) => c + 1);
-      setLocked(false);
-      setSelected(null);
+      const nextIndex = current + 1;
+      setCurrent(nextIndex);
+      setLocked(status[nextIndex] === "correct" || status[nextIndex] === "incorrect");
+      setSelected(answers[nextIndex]);
     }
-  }, [current, questions.length]);
+    return true;
+  }, [current, questions.length, status, answers]);
 
   const prev = useCallback(() => {
     if (current === 0) return;
-    setCurrent((c) => c - 1);
-    setLocked(false);
-    setSelected(null);
-  }, [current]);
+    const prevIndex = current - 1;
+    setCurrent(prevIndex);
+    setLocked(status[prevIndex] === "correct" || status[prevIndex] === "incorrect");
+    setSelected(answers[prevIndex]);
+  }, [current, status, answers]);
 
   const skip = useCallback(() => {
-    setSkipped((s) => [...s, current]);
+    if (status[current] !== "pending") return;
+    setStatus((s) => {
+      const copy = [...s];
+      copy[current] = "skipped";
+      return copy;
+    });
     next();
-  }, [current, next]);
+  }, [current, next, status]);
 
-  const handleOption = useCallback(
+  const pickOption = useCallback(
     (index) => {
       if (locked) return;
       setSelected(index);
+      setAnswers((a) => {
+        const copy = [...a];
+        copy[current] = index;
+        return copy;
+      });
+      const isCorrect = index === correctIndex;
+      setStatus((s) => {
+        const copy = [...s];
+        copy[current] = isCorrect ? "correct" : "incorrect";
+        return copy;
+      });
       setLocked(true);
-      if (index === correctIndex) {
+      if (isCorrect) {
         setScore((s) => s + 1);
-        setTimeout(next, 800);
+        setTimeout(() => next(), 600);
       }
     },
-    [locked, correctIndex, next]
+    [locked, correctIndex, current, next]
   );
 
   const closeModal = useCallback(() => setShowResult(false), []);
@@ -80,17 +102,17 @@ export default function useTrivia() {
       if (e.key === "Enter") {
         next();
       } else if (e.key >= "1" && e.key <= "4") {
-        handleOption(Number(e.key) - 1);
+        pickOption(Number(e.key) - 1);
       }
     };
     window.addEventListener("keydown", onKey);
     return () => window.removeEventListener("keydown", onKey);
-  }, [handleOption, next, restart, showResult, closeModal]);
+  }, [pickOption, next, restart, showResult, closeModal]);
 
   return {
     question: currentQuestion.question || "",
     options,
-    handleOption,
+    pickOption,
     locked,
     selected,
     correctIndex,
@@ -103,6 +125,9 @@ export default function useTrivia() {
     next,
     prev,
     skip,
-    skipped,
+    status,
+    canPrev: current > 0,
+    canNext: status[current] !== "pending",
+    canSkip: status[current] === "pending",
   };
 }
