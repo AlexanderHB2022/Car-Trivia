@@ -18,7 +18,7 @@ export function useTrivia() {
 
   // "pending" | "skipped" | "correct" | "incorrect"
   const [status, setStatus] = React.useState(() => Array(TOTAL).fill("pending"));
-
+  // Sólo controla el locking visual de opciones de la pregunta actual
   const [optionsState, setOptionsState] = React.useState({
     locked: false, correctIndex: null, chosenIndex: null
   });
@@ -26,24 +26,20 @@ export function useTrivia() {
   const finished = questionIndex >= deck.length;
   const current = finished ? { question:"", options:[], answerIndex:0 } : deck[questionIndex];
 
-  const markStatus = (idx, value) => {
-    setStatus(prev => {
-      const next = [...prev];
-      next[idx] = value;
-      return next;
-    });
-  };
+  const mark = (idx, val) => setStatus(prev => {
+    const next = [...prev]; next[idx] = val; return next;
+  });
 
   const pickOption = (idx) => {
-    if (optionsState.locked || finished) return;
+    if (finished || optionsState.locked) return;
     const correctIndex = current.answerIndex;
     const isCorrect = idx === correctIndex;
 
     setOptionsState({ locked: true, correctIndex, chosenIndex: idx });
-    markStatus(questionIndex, isCorrect ? "correct" : "incorrect");
+    mark(questionIndex, isCorrect ? "correct" : "incorrect");
     if (isCorrect) setScore(s => s + 1);
 
-    // Auto-avance si acierta
+    // Auto-avance sólo si es correcta
     if (isCorrect) {
       window.setTimeout(() => { next(); }, 600);
     }
@@ -51,7 +47,7 @@ export function useTrivia() {
 
   const next = () => {
     if (finished) return;
-    // Solo permitir next si no está pendiente (respondida o saltada)
+    // sólo permitir next si no está pendiente (respondida o saltada)
     if (status[questionIndex] === "pending") return;
     setQuestionIndex(i => i + 1);
     setOptionsState({ locked: false, correctIndex: null, chosenIndex: null });
@@ -59,14 +55,17 @@ export function useTrivia() {
 
   const prev = () => {
     if (questionIndex === 0) return;
-    setQuestionIndex(i => i - 1);
-    // mostrar estado previo si ya estaba respondida
-    const prevIdx = questionIndex - 1;
-    const was = status[prevIdx];
-    if (was === "correct" || was === "incorrect") {
-      const correctIndex = deck[prevIdx].answerIndex;
-      const chosenIndex = was === "correct" ? correctIndex : null; // si quieres recordar la elegida, guárdala aparte
-      setOptionsState({ locked: true, correctIndex, chosenIndex });
+    const target = questionIndex - 1;
+    setQuestionIndex(target);
+    // reconstruir el estado visual de la pregunta previa
+    const prevStatus = status[target];
+    if (prevStatus === "correct" || prevStatus === "incorrect") {
+      const correctIndex = deck[target].answerIndex;
+      setOptionsState({
+        locked: true,
+        correctIndex,
+        chosenIndex: prevStatus === "correct" ? correctIndex : null
+      });
     } else {
       setOptionsState({ locked: false, correctIndex: null, chosenIndex: null });
     }
@@ -74,11 +73,10 @@ export function useTrivia() {
 
   const skip = () => {
     if (finished) return;
-    // Marca saltada solo si estaba pendiente
     if (status[questionIndex] === "pending") {
-      markStatus(questionIndex, "skipped");
+      mark(questionIndex, "skipped");
     }
-    next(); // avanza
+    next();
   };
 
   const restart = () => {
@@ -91,13 +89,12 @@ export function useTrivia() {
   };
 
   const canPrev = questionIndex > 0;
-  const canNext = !finished && status[questionIndex] !== "pending";   // “Siguiente” solo si respondida/saltada
-  const canSkip = !finished && status[questionIndex] === "pending";   // “Saltar” solo si pendiente
+  const canNext = !finished && status[questionIndex] !== "pending";
+  const canSkip = !finished && status[questionIndex] === "pending";
 
   const handleKeyDown = React.useCallback((e) => {
     if (e.key === "Escape") {
       e.preventDefault();
-      // si manejas visibilidad de modal, podrías cerrarlo aquí
     } else if (e.key === "Enter") {
       e.preventDefault();
       if (finished) restart();

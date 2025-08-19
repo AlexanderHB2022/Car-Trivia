@@ -7,7 +7,7 @@ export default function QuestionCard({ text, current = 0, total = 10, status = [
     if (i === current) cls += " is-current";
     if (st === "correct") cls += " is-correct";
     else if (st === "incorrect") cls += " is-incorrect";
-    else if (st === "skipped") cls += " is-skipped";
+    else if (st === "skipped" || st === "pending") cls += " is-skipped";
     return <span key={i} className={cls} />;
   });
 

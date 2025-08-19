@@ -50,7 +50,6 @@ button:focus-visible {
 }
 
 button:disabled {
-  opacity: 0.6;
   cursor: default;
 }
 .game-container {
@@ -322,31 +321,6 @@ button:disabled {
   }
 }
 
-.option-btn {
-  padding: clamp(0.75rem, 2vw, 1rem);
-  font-size: clamp(1rem, 2.5vw, 1.125rem);
-  min-height: 3rem;
-}
-
-.option-btn.is-correct {
-  background: var(--correct);
-  border-color: var(--correct);
-}
-
-.option-btn.is-incorrect {
-  background: var(--error);
-  border-color: var(--error);
-}
-
-.option-btn.is-skipped {
-  background: var(--present);
-  border-color: var(--present);
-}
-
-.nav-btn {
-  padding: clamp(0.75rem, 2vw, 1rem) 1.25rem;
-  min-height: 3rem;
-}
 
 .result-modal {
   text-align: center;
@@ -407,14 +381,12 @@ button:disabled {
   .btn-lg,
   .option-btn,
   .top-bar-action,
-  .nav-btn {
+  .pill-btn {
     transition: none !important;
   }
 }
 
-/* === Car Trivia – UI refinements === */
-
-/* Contenedor vertical consistente */
+/* Layout estable: misma estructura en todas las preguntas */
 .game-container {
   display: grid;
   grid-template-rows: auto auto 1fr auto; /* meta/progreso | pregunta | opciones | navegación */
@@ -424,9 +396,9 @@ button:disabled {
   padding-inline: clamp(12px, 2.2vw, 24px);
 }
 
-/* Pregunta con altura mínima estable para evitar saltos */
+/* Tarjeta de pregunta con altura mínima para evitar saltos visuales */
 .question-card {
-  min-height: clamp(96px, 14vh, 140px); /* 2–3 líneas */
+  min-height: clamp(120px, 16vh, 160px);
   display: grid;
   align-content: center;
   padding: clamp(12px, 2vw, 20px);
@@ -434,69 +406,46 @@ button:disabled {
   box-shadow: var(--shadow, 0 10px 24px rgba(0,0,0,.15));
 }
 
-/* Grilla de opciones uniforme */
-.options-grid {
-  display: grid;
-  gap: clamp(10px, 2vw, 16px);
-  grid-template-columns: 1fr; /* mobile */
-}
-@media (min-width: 640px) {
-  .options-grid { grid-template-columns: 1fr 1fr; }
-}
+/* Grid de opciones uniforme */
+.options-grid { display: grid; gap: clamp(10px, 2vw, 16px); grid-template-columns: 1fr; }
+@media (min-width: 640px) { .options-grid { grid-template-columns: 1fr 1fr; } }
 
-/* Botones de opción con altura mínima uniforme */
+/* Botones de opción: altura mínima uniforme y estados vivos */
 .option-btn {
   min-height: 56px;
   border-radius: var(--radius, 12px);
-  border: 1px solid var(--accent, rgba(255,255,255,.2));
+  border: 1px solid var(--accent, rgba(255,255,255,.25));
   transition: background-color .18s, color .18s, border-color .18s, transform .18s, box-shadow .18s;
 }
-
-/* Al bloquear la pregunta, desactiva interacción, PERO no apagues el color de estado */
-.option-btn:disabled { opacity: .6; cursor: default; }
+.option-btn:disabled { cursor: default; }
 .option-btn.is-correct,
-.option-btn.is-incorrect {
-  opacity: 1;                 /* <- quita opacidad lavada */
-  color: var(--text-color, #fff);
-}
-.option-btn.is-correct {
-  background: var(--correct);
-  border-color: var(--correct);
-  animation: pop .18s ease-out;
-}
-.option-btn.is-incorrect {
-  background: var(--error, hsl(0 72% 55%));
-  border-color: var(--error, hsl(0 72% 55%));
-  animation: shake .24s linear;
-}
+.option-btn.is-incorrect { opacity: 1; color: var(--text-color, #fff); }
+.option-btn.is-correct { background: var(--correct); border-color: var(--correct); animation: pop .18s ease-out; }
+.option-btn.is-incorrect { background: var(--error); border-color: var(--error); animation: shake .24s linear; }
 
-/* Barra de progreso: 3 estados */
-.progress-dot { opacity: .5; }
+/* Progreso: 3 estados bien visibles */
+.progress-dot { opacity: .45; }
 .progress-dot.is-current { opacity: 1; }
 .progress-dot.is-correct { background: var(--correct) !important; opacity: 1; }
-.progress-dot.is-incorrect { background: var(--error, hsl(0 72% 55%)) !important; opacity: 1; }
+.progress-dot.is-incorrect { background: var(--error) !important; opacity: 1; }
 .progress-dot.is-skipped { background: var(--present) !important; opacity: 1; }
 
-/* Navegación: 3 botones uniformes */
-.nav-row {
-  display: grid;
-  grid-template-columns: 1fr 1fr 1fr;
-  gap: clamp(10px, 2vw, 16px);
-  justify-items: center;
-}
-.nav-btn {
+/* Botones de navegación tipo “pastilla clara con borde y sombra” */
+.nav-row { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: clamp(10px, 2vw, 16px); }
+.pill-btn {
   min-height: 44px;
   padding: 10px 16px;
-  border-radius: var(--radius, 12px);
-  background: transparent;
-  border: 1px solid var(--accent, rgba(255,255,255,.25));
+  border-radius: 999px;
+  background: rgba(255,255,255,.08); /* claro */
+  border: 1px solid rgba(0,0,0,.25);
+  box-shadow: 0 2px 0 rgba(0,0,0,.35);
   color: var(--text-color, #fff);
   transition: background-color .18s, border-color .18s, box-shadow .18s, transform .18s;
 }
-.nav-btn:hover:not(:disabled) { transform: translateY(-1px); }
-.nav-btn:disabled { opacity: .5; }
+.pill-btn:hover:not(:disabled) { transform: translateY(-1px); }
+.pill-btn:disabled { opacity: .5; }
 
-/* Emoji del TopBar: borde/outline, sin caja de fondo */
+/* Emoji del TopBar: sólo contorno circular, sin caja de fondo */
 .icon-btn {
   background: transparent;
   border: 1px solid var(--accent, rgba(255,255,255,.25));
@@ -505,15 +454,15 @@ button:disabled {
   box-shadow: none;
 }
 
-/* Animaciones sutiles */
+/* Animaciones */
 @keyframes pop { 0%{transform: scale(.98)} 100%{transform: scale(1)} }
 @keyframes shake {
   0%{ transform: translateX(0) } 25%{ transform: translateX(-2px) }
   50%{ transform: translateX(2px) } 75%{ transform: translateX(-2px) } 100%{ transform: translateX(0) }
 }
-
-/* Respeta reduced motion */
 @media (prefers-reduced-motion: reduce) {
-  .option-btn, .nav-btn { transition: none; }
+  .option-btn, .pill-btn { transition: none; }
   .option-btn.is-correct, .option-btn.is-incorrect { animation: none; }
 }
+
+/* FIN de añadidos */
