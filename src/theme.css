@@ -266,19 +266,25 @@ body {
 
 .top-bar-action {
   justify-self: end;
+  width: var(--key-size);
+  height: var(--key-size);
+  display: flex;
+  align-items: center;
+  justify-content: center;
   background: transparent;
-  border: none;
+  border: 2px solid var(--text-color);
+  border-radius: 50%;
   color: var(--text-color);
-  font-size: 1.5rem;
+  font-size: 1.25rem;
   cursor: pointer;
-  transition: transform 180ms ease;
+  transition: background-color 180ms ease, transform 180ms ease;
 }
 
-.top-bar-action:hover {
-  transform: scale(1.1);
+.top-bar-action:hover:not(:disabled) {
+  background-color: var(--color3);
 }
 
-.top-bar-action:active {
+.top-bar-action:active:not(:disabled) {
   transform: scale(0.95);
 }
 
@@ -329,6 +335,14 @@ body {
   display: grid;
   gap: 1rem;
   width: 100%;
+}
+
+.question-nav {
+  display: flex;
+  justify-content: center;
+  gap: 0.5rem;
+  margin-top: 1rem;
+  flex-wrap: wrap;
 }
 
 @media (min-width: 640px) {
