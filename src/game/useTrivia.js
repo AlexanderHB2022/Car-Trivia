@@ -82,5 +82,7 @@ export default function useTrivia() {
     score,
     restart,
     closeModal,
+    current,
+    total: questions.length,
   };
 }
