@@ -1,0 +1,202 @@
+[
+  {
+    "question": "¿Qué empresa fabrica el modelo Mustang?",
+    "options": [
+      "Chevrolet",
+      "Ford",
+      "Dodge",
+      "Toyota"
+    ],
+    "answerIndex": 1
+  },
+  {
+    "question": "¿De qué país es originaria la marca Toyota?",
+    "options": [
+      "Japón",
+      "Alemania",
+      "Estados Unidos",
+      "Italia"
+    ],
+    "answerIndex": 0
+  },
+  {
+    "question": "¿Cuál es el combustible principal de un auto eléctrico?",
+    "options": [
+      "Gasolina",
+      "Electricidad",
+      "Diesel",
+      "Gas"
+    ],
+    "answerIndex": 1
+  },
+  {
+    "question": "¿Qué marca produce el modelo Civic?",
+    "options": [
+      "Nissan",
+      "Honda",
+      "Mazda",
+      "Hyundai"
+    ],
+    "answerIndex": 1
+  },
+  {
+    "question": "¿Cuál de estos es un vehículo deportivo de Lamborghini?",
+    "options": [
+      "Camry",
+      "Aventador",
+      "Fiesta",
+      "Jetta"
+    ],
+    "answerIndex": 1
+  },
+  {
+    "question": "¿Qué significa ABS en los autos?",
+    "options": [
+      "Air Bag System",
+      "Anti-lock Braking System",
+      "Automatic Brake Setup",
+      "Advanced Battery Source"
+    ],
+    "answerIndex": 1
+  },
+  {
+    "question": "¿Qué parte del auto carga la batería mientras el motor está en marcha?",
+    "options": [
+      "Alternador",
+      "Radiador",
+      "Filtro de aire",
+      "Catalizador"
+    ],
+    "answerIndex": 0
+  },
+  {
+    "question": "¿Cuál es la marca premium de Toyota?",
+    "options": [
+      "Infiniti",
+      "Acura",
+      "Lexus",
+      "Genesis"
+    ],
+    "answerIndex": 2
+  },
+  {
+    "question": "¿Qué empresa produce el modelo Beetle?",
+    "options": [
+      "Volkswagen",
+      "Renault",
+      "Peugeot",
+      "Kia"
+    ],
+    "answerIndex": 0
+  },
+  {
+    "question": "¿Qué marca es conocida por su emblema del caballo encabritado?",
+    "options": [
+      "Ferrari",
+      "Audi",
+      "BMW",
+      "Volvo"
+    ],
+    "answerIndex": 0
+  },
+  {
+    "question": "¿Cuál es la principal ventaja de un motor híbrido?",
+    "options": [
+      "Mayor consumo de combustible",
+      "Combina motor eléctrico y de combustión",
+      "Sólo funciona con gas",
+      "No requiere mantenimiento"
+    ],
+    "answerIndex": 1
+  },
+  {
+    "question": "¿Qué marca produce el modelo 911?",
+    "options": [
+      "Porsche",
+      "Citroën",
+      "Seat",
+      "Suzuki"
+    ],
+    "answerIndex": 0
+  },
+  {
+    "question": "¿En qué década se lanzó el primer Ford Mustang?",
+    "options": [
+      "1950",
+      "1960",
+      "1970",
+      "1980"
+    ],
+    "answerIndex": 1
+  },
+  {
+    "question": "¿Cuál de estos es un SUV?",
+    "options": [
+      "Corolla",
+      "Model X",
+      "Miata",
+      "208"
+    ],
+    "answerIndex": 1
+  },
+  {
+    "question": "¿Qué marca utiliza la tecnología 'quattro' para tracción?",
+    "options": [
+      "Audi",
+      "Subaru",
+      "Mercedes",
+      "BMW"
+    ],
+    "answerIndex": 0
+  },
+  {
+    "question": "¿Qué país alberga a la marca automotriz Volvo?",
+    "options": [
+      "Suecia",
+      "Francia",
+      "Italia",
+      "Canadá"
+    ],
+    "answerIndex": 0
+  },
+  {
+    "question": "¿Cuál es la función del catalizador en un auto?",
+    "options": [
+      "Mejorar la aerodinámica",
+      "Reducir emisiones",
+      "Aumentar la potencia",
+      "Enfriar el motor"
+    ],
+    "answerIndex": 1
+  },
+  {
+    "question": "¿Qué marca produce el modelo Impreza?",
+    "options": [
+      "Subaru",
+      "Fiat",
+      "Seat",
+      "Skoda"
+    ],
+    "answerIndex": 0
+  },
+  {
+    "question": "¿Cuál es la marca estadounidense conocida por el modelo Corvette?",
+    "options": [
+      "Ford",
+      "Chevrolet",
+      "Tesla",
+      "GMC"
+    ],
+    "answerIndex": 1
+  },
+  {
+    "question": "¿Qué sistema ayuda a la estabilidad en curvas y maniobras bruscas?",
+    "options": [
+      "ESP",
+      "GPS",
+      "LED",
+      "ABS"
+    ],
+    "answerIndex": 0
+  }
+]
