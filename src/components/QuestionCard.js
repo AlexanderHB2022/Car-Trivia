@@ -1,15 +1,14 @@
 import React from "react";
 
 export default function QuestionCard({ text, current = 0, total = 10, status = [] }) {
-  const chips = Array.from({ length: total }).map((_, i) => {
-    const st = status[i] || "pending";
-    const cls =
-      st === "correct"
-        ? "is-correct"
-        : st === "incorrect"
-        ? "is-incorrect"
-        : "is-skipped";
-    return <span key={i} className={`chip ${cls}`} />;
+  const dots = Array.from({ length: total }).map((_, i) => {
+    const st = status[i];
+    let cls = "progress-dot";
+    if (i === current) cls += " is-current";
+    if (st === "correct") cls += " is-correct";
+    else if (st === "incorrect") cls += " is-incorrect";
+    else if (st === "skipped") cls += " is-skipped";
+    return <span key={i} className={cls} />;
   });
 
   return (
@@ -19,10 +18,10 @@ export default function QuestionCard({ text, current = 0, total = 10, status = [
           Pregunta {current + 1} / {total}
         </span>
         <div className="progress" aria-hidden="true">
-          {chips}
+          {dots}
         </div>
       </div>
-      <div key={text} className="question-card card" aria-live="polite">
+      <div key={text} className="question-card" aria-live="polite">
         {text}
       </div>
     </section>

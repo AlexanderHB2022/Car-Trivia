@@ -1,133 +1,117 @@
-import { useState, useEffect, useCallback } from "react";
-import questionsData from "../data/questions.json";
+import React from "react";
+import raw from "../data/questions.json";
 
 function shuffle(arr) {
-  return arr.sort(() => Math.random() - 0.5);
+  const a = [...arr];
+  for (let i = a.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [a[i], a[j]] = [a[j], a[i]];
+  }
+  return a;
 }
 
-export default function useTrivia() {
-  const [questions, setQuestions] = useState([]);
-  const [current, setCurrent] = useState(0);
-  const [score, setScore] = useState(0);
-  const [locked, setLocked] = useState(false);
-  const [selected, setSelected] = useState(null);
-  const [showResult, setShowResult] = useState(false);
-  const [status, setStatus] = useState([]); // "pending" | "skipped" | "correct" | "incorrect"
-  const [answers, setAnswers] = useState([]);
+export function useTrivia() {
+  const TOTAL = 10;
+  const [deck, setDeck] = React.useState(() => shuffle(raw).slice(0, TOTAL));
+  const [questionIndex, setQuestionIndex] = React.useState(0);
+  const [score, setScore] = React.useState(0);
 
-  const currentQuestion = questions[current] || {};
-  const correctIndex = currentQuestion.answerIndex;
-  const options = currentQuestion.options || [];
+  // "pending" | "skipped" | "correct" | "incorrect"
+  const [status, setStatus] = React.useState(() => Array(TOTAL).fill("pending"));
 
-  const restart = useCallback(() => {
-    const shuffled = shuffle([...questionsData]).slice(0, 10);
-    setQuestions(shuffled);
-    setCurrent(0);
-    setScore(0);
-    setLocked(false);
-    setSelected(null);
-    setShowResult(false);
-    setStatus(new Array(shuffled.length).fill("pending"));
-    setAnswers(new Array(shuffled.length).fill(null));
-  }, []);
+  const [optionsState, setOptionsState] = React.useState({
+    locked: false, correctIndex: null, chosenIndex: null
+  });
 
-  useEffect(() => {
-    restart();
-  }, [restart]);
+  const finished = questionIndex >= deck.length;
+  const current = finished ? { question:"", options:[], answerIndex:0 } : deck[questionIndex];
 
-  const next = useCallback(() => {
-    if (status[current] === "pending") return false;
-    if (current + 1 >= questions.length) {
-      setShowResult(true);
-    } else {
-      const nextIndex = current + 1;
-      setCurrent(nextIndex);
-      setLocked(status[nextIndex] === "correct" || status[nextIndex] === "incorrect");
-      setSelected(answers[nextIndex]);
-    }
-    return true;
-  }, [current, questions.length, status, answers]);
-
-  const prev = useCallback(() => {
-    if (current === 0) return;
-    const prevIndex = current - 1;
-    setCurrent(prevIndex);
-    setLocked(status[prevIndex] === "correct" || status[prevIndex] === "incorrect");
-    setSelected(answers[prevIndex]);
-  }, [current, status, answers]);
-
-  const skip = useCallback(() => {
-    if (status[current] !== "pending") return;
-    setStatus((s) => {
-      const copy = [...s];
-      copy[current] = "skipped";
-      return copy;
+  const markStatus = (idx, value) => {
+    setStatus(prev => {
+      const next = [...prev];
+      next[idx] = value;
+      return next;
     });
-    next();
-  }, [current, next, status]);
+  };
 
-  const pickOption = useCallback(
-    (index) => {
-      if (locked) return;
-      setSelected(index);
-      setAnswers((a) => {
-        const copy = [...a];
-        copy[current] = index;
-        return copy;
-      });
-      const isCorrect = index === correctIndex;
-      setStatus((s) => {
-        const copy = [...s];
-        copy[current] = isCorrect ? "correct" : "incorrect";
-        return copy;
-      });
-      setLocked(true);
-      if (isCorrect) {
-        setScore((s) => s + 1);
-        setTimeout(() => next(), 600);
-      }
-    },
-    [locked, correctIndex, current, next]
-  );
+  const pickOption = (idx) => {
+    if (optionsState.locked || finished) return;
+    const correctIndex = current.answerIndex;
+    const isCorrect = idx === correctIndex;
 
-  const closeModal = useCallback(() => setShowResult(false), []);
+    setOptionsState({ locked: true, correctIndex, chosenIndex: idx });
+    markStatus(questionIndex, isCorrect ? "correct" : "incorrect");
+    if (isCorrect) setScore(s => s + 1);
 
-  useEffect(() => {
-    const onKey = (e) => {
-      if (showResult) {
-        if (e.key === "Enter") restart();
-        if (e.key === "Escape") closeModal();
-        return;
-      }
-      if (e.key === "Enter") {
-        next();
-      } else if (e.key >= "1" && e.key <= "4") {
-        pickOption(Number(e.key) - 1);
-      }
-    };
-    window.addEventListener("keydown", onKey);
-    return () => window.removeEventListener("keydown", onKey);
-  }, [pickOption, next, restart, showResult, closeModal]);
+    // Auto-avance si acierta
+    if (isCorrect) {
+      window.setTimeout(() => { next(); }, 600);
+    }
+  };
+
+  const next = () => {
+    if (finished) return;
+    // Solo permitir next si no está pendiente (respondida o saltada)
+    if (status[questionIndex] === "pending") return;
+    setQuestionIndex(i => i + 1);
+    setOptionsState({ locked: false, correctIndex: null, chosenIndex: null });
+  };
+
+  const prev = () => {
+    if (questionIndex === 0) return;
+    setQuestionIndex(i => i - 1);
+    // mostrar estado previo si ya estaba respondida
+    const prevIdx = questionIndex - 1;
+    const was = status[prevIdx];
+    if (was === "correct" || was === "incorrect") {
+      const correctIndex = deck[prevIdx].answerIndex;
+      const chosenIndex = was === "correct" ? correctIndex : null; // si quieres recordar la elegida, guárdala aparte
+      setOptionsState({ locked: true, correctIndex, chosenIndex });
+    } else {
+      setOptionsState({ locked: false, correctIndex: null, chosenIndex: null });
+    }
+  };
+
+  const skip = () => {
+    if (finished) return;
+    // Marca saltada solo si estaba pendiente
+    if (status[questionIndex] === "pending") {
+      markStatus(questionIndex, "skipped");
+    }
+    next(); // avanza
+  };
+
+  const restart = () => {
+    const fresh = shuffle(raw).slice(0, TOTAL);
+    setDeck(fresh);
+    setQuestionIndex(0);
+    setScore(0);
+    setStatus(Array(TOTAL).fill("pending"));
+    setOptionsState({ locked: false, correctIndex: null, chosenIndex: null });
+  };
+
+  const canPrev = questionIndex > 0;
+  const canNext = !finished && status[questionIndex] !== "pending";   // “Siguiente” solo si respondida/saltada
+  const canSkip = !finished && status[questionIndex] === "pending";   // “Saltar” solo si pendiente
+
+  const handleKeyDown = React.useCallback((e) => {
+    if (e.key === "Escape") {
+      e.preventDefault();
+      // si manejas visibilidad de modal, podrías cerrarlo aquí
+    } else if (e.key === "Enter") {
+      e.preventDefault();
+      if (finished) restart();
+      else next();
+    } else if (!optionsState.locked && !finished && ["1","2","3","4"].includes(e.key)) {
+      const idx = Number(e.key) - 1;
+      if (idx >= 0 && idx < 4) pickOption(idx);
+    }
+  }, [optionsState.locked, finished, questionIndex, status]);
 
   return {
-    question: currentQuestion.question || "",
-    options,
-    pickOption,
-    locked,
-    selected,
-    correctIndex,
-    showResult,
-    score,
-    restart,
-    closeModal,
-    current,
-    total: questions.length,
-    next,
-    prev,
-    skip,
-    status,
-    canPrev: current > 0,
-    canNext: status[current] !== "pending",
-    canSkip: status[current] === "pending",
+    current, questionIndex, total: TOTAL,
+    optionsState, pickOption, next, prev, skip,
+    finished, score, restart, handleKeyDown,
+    canPrev, canNext, canSkip, status
   };
 }
