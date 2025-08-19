@@ -12,7 +12,7 @@ export default function OptionsGrid({ options, onSelect, locked, selected, corre
         return (
           <button
             key={idx}
-            className={`option-btn btn-lg ${state}`}
+            className={`option-btn ${state}`}
             onClick={() => onSelect(idx)}
             disabled={locked}
             aria-pressed={selected === idx}

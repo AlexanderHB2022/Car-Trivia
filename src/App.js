@@ -11,7 +11,7 @@ export default function App() {
   const {
     question,
     options,
-    handleOption,
+    pickOption,
     locked,
     selected,
     correctIndex,
@@ -23,26 +23,30 @@ export default function App() {
     next,
     prev,
     skip,
+    status,
+    canPrev,
+    canNext,
+    canSkip,
   } = useTrivia();
 
   return (
     <GameLayout>
       <TopBar title="Car Trivia" actionIcon="🔁" onAction={restart} />
-      <QuestionCard text={question} current={current} total={total} score={score} />
+      <QuestionCard text={question} current={current} total={total} status={status} />
       <OptionsGrid
         options={options}
-        onSelect={handleOption}
+        onSelect={pickOption}
         locked={locked}
         selected={selected}
         correctIndex={correctIndex}
       />
       <QuestionNavigation
         onPrev={prev}
-        onNext={next}
         onSkip={skip}
-        disablePrev={current === 0}
-        disableNext={current >= total - 1}
-        disableSkip={locked || current >= total - 1}
+        onNext={next}
+        canPrev={canPrev}
+        canSkip={canSkip}
+        canNext={canNext}
       />
       {showResult && <ResultModal score={score} onRestart={restart} />}
     </GameLayout>

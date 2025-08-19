@@ -2,37 +2,37 @@ import React from "react";
 
 export default function QuestionNavigation({
   onPrev,
-  onNext,
   onSkip,
-  disablePrev,
-  disableNext,
-  disableSkip,
+  onNext,
+  canPrev,
+  canSkip,
+  canNext,
 }) {
   return (
     <div className="question-nav" role="navigation">
       <button
-        className="btn-lg"
+        className="nav-btn"
         onClick={onPrev}
-        disabled={disablePrev}
+        disabled={!canPrev}
         aria-label="Ir a la pregunta anterior"
       >
-        ⬅️ Anterior
+        Anterior
       </button>
       <button
-        className="btn-lg"
+        className="nav-btn"
         onClick={onSkip}
-        disabled={disableSkip}
+        disabled={!canSkip}
         aria-label="Saltar pregunta"
       >
-        ↩️ Saltar
+        Saltar
       </button>
       <button
-        className="btn-lg"
+        className="nav-btn"
         onClick={onNext}
-        disabled={disableNext}
+        disabled={!canNext}
         aria-label="Ir a la siguiente pregunta"
       >
-        ➡️ Siguiente
+        Siguiente
       </button>
     </div>
   );
