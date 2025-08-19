@@ -1,5 +1,9 @@
 import React from "react";
 
 export default function GameLayout({ children }) {
-  return <div className="game-container">{children}</div>;
+  return (
+    <main className="game-container">
+      <div className="container game-stack">{children}</div>
+    </main>
+  );
 }

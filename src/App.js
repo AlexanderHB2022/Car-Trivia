@@ -17,12 +17,14 @@ export default function App() {
     showResult,
     score,
     restart,
+    current,
+    total,
   } = useTrivia();
 
   return (
     <GameLayout>
       <TopBar title="Car Trivia" actionIcon="🔁" onAction={restart} />
-      <QuestionCard text={question} />
+      <QuestionCard text={question} current={current} total={total} score={score} />
       <OptionsGrid
         options={options}
         onSelect={handleOption}
