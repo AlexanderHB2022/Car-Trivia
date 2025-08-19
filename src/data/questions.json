@@ -1,0 +1,22 @@
+[
+  { "question": "¿De qué país es la marca SEAT?", "options": ["Alemania","España","Italia","Francia"], "answerIndex": 1 },
+  { "question": "¿Cuál fue el primer auto de producción de Tesla?", "options": ["Model 3","Roadster","Model S","Model X"], "answerIndex": 1 },
+  { "question": "El Nissan GT-R es conocido como…", "options": ["Godzilla","Kraken","Leviatán","Dragón"], "answerIndex": 0 },
+  { "question": "¿Qué marca fabrica el modelo Civic?", "options": ["Toyota","Honda","Nissan","Mazda"], "answerIndex": 1 },
+  { "question": "¿De qué país es la marca Škoda?", "options": ["Polonia","República Checa","Alemania","Austria"], "answerIndex": 1 },
+  { "question": "¿Qué modelo hizo famoso a Lamborghini en los 60s?", "options": ["Diablo","Countach","Miura","Huracán"], "answerIndex": 2 },
+  { "question": "El 911 es el icono de…", "options": ["Ferrari","Aston Martin","Porsche","McLaren"], "answerIndex": 2 },
+  { "question": "¿Cuál de estos es un muscle car clásico?", "options": ["Camaro","Cayenne","Corsa","Clio"], "answerIndex": 0 },
+  { "question": "¿Qué marca usa el emblema del tridente?", "options": ["Maserati","Alfa Romeo","Bugatti","Pagani"], "answerIndex": 0 },
+  { "question": "¿Cuál fue el primer auto híbrido masivo de Toyota?", "options": ["Corolla Hybrid","Prius","Auris","Yaris"], "answerIndex": 1 },
+  { "question": "El Skyline es un modelo asociado a…", "options": ["Nissan","Mitsubishi","Subaru","Suzuki"], "answerIndex": 0 },
+  { "question": "¿De qué país es la marca Volvo?", "options": ["Noruega","Suecia","Finlandia","Dinamarca"], "answerIndex": 1 },
+  { "question": "El motor bóxer es típico de…", "options": ["Porsche","BMW","Audi","Mercedes-Benz"], "answerIndex": 0 },
+  { "question": "¿Qué marca lanzó el Quattro con tracción integral icónica?", "options": ["Audi","BMW","Opel","Peugeot"], "answerIndex": 0 },
+  { "question": "¿Qué Ferrari es V8 central clásico de los 80s?", "options": ["348","F430","308","458"], "answerIndex": 2 },
+  { "question": "La ‘M’ de BMW M significa…", "options": ["Motor","Meister","Motorsport","Master"], "answerIndex": 2 },
+  { "question": "¿Cuál es un todoterreno emblemático de Mercedes?", "options": ["GLA","GLC","Clase G","GLB"], "answerIndex": 2 },
+  { "question": "El WRC ha sido dominado históricamente por…", "options": ["Lancia y Citroën","Jaguar y Lotus","Chevrolet y Ford","Hyundai y Kia"], "answerIndex": 0 },
+  { "question": "¿Qué fabricante creó el rotativo (Wankel) RX-7?", "options": ["Mazda","Mitsubishi","Toyota","Subaru"], "answerIndex": 0 },
+  { "question": "¿Qué superdeportivo italiano lleva el nombre de un viento?", "options": ["Gallardo","Murciélago","Aventador","Huracán"], "answerIndex": 3 }
+]
