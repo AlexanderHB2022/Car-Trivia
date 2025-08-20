@@ -39,16 +39,14 @@ export function useTrivia() {
     mark(questionIndex, isCorrect ? "correct" : "incorrect");
     if (isCorrect) setScore(s => s + 1);
 
-    // Auto-avance sólo si es correcta
-    if (isCorrect) {
-      window.setTimeout(() => { next(); }, 600);
-    }
+    // Avance automático siempre tras responder
+    window.setTimeout(() => { next(true); }, 600);
   };
 
-  const next = () => {
+  const next = (force = false) => {
     if (finished) return;
     // sólo permitir next si no está pendiente (respondida o saltada)
-    if (status[questionIndex] === "pending") return;
+    if (!force && status[questionIndex] === "pending") return;
     setQuestionIndex(i => i + 1);
     setOptionsState({ locked: false, correctIndex: null, chosenIndex: null });
   };
@@ -76,7 +74,7 @@ export function useTrivia() {
     if (status[questionIndex] === "pending") {
       mark(questionIndex, "skipped");
     }
-    next();
+    next(true);
   };
 
   const restart = () => {

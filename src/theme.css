@@ -200,7 +200,6 @@ button:disabled {
 }
 
 .result-modal .restart-btn {
-  padding: 0.5rem 1rem;
   font-weight: bold;
   margin: 1rem auto 0;
   display: block;
@@ -380,8 +379,7 @@ button:disabled {
   }
   .btn-lg,
   .option-btn,
-  .top-bar-action,
-  .pill-btn {
+  .top-bar-action {
     transition: none !important;
   }
 }
@@ -396,9 +394,9 @@ button:disabled {
   padding-inline: clamp(12px, 2.2vw, 24px);
 }
 
-/* Tarjeta de pregunta con altura mínima para evitar saltos visuales */
+/* Tarjeta de pregunta con altura fija para evitar saltos visuales */
 .question-card {
-  min-height: clamp(120px, 16vh, 160px);
+  height: clamp(120px, 16vh, 160px);
   display: grid;
   align-content: center;
   padding: clamp(12px, 2vw, 20px);
@@ -410,12 +408,16 @@ button:disabled {
 .options-grid { display: grid; gap: clamp(10px, 2vw, 16px); grid-template-columns: 1fr; }
 @media (min-width: 640px) { .options-grid { grid-template-columns: 1fr 1fr; } }
 
-/* Botones de opción: altura mínima uniforme y estados vivos */
+/* Botones de opción y navegación: tamaño y estilos uniformes */
 .option-btn {
-  min-height: 56px;
+  height: 56px;
   border-radius: var(--radius, 12px);
   border: 1px solid var(--accent, rgba(255,255,255,.25));
   transition: background-color .18s, color .18s, border-color .18s, transform .18s, box-shadow .18s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
 }
 .option-btn:disabled { cursor: default; }
 .option-btn.is-correct,
@@ -430,20 +432,8 @@ button:disabled {
 .progress-dot.is-incorrect { background: var(--error) !important; opacity: 1; }
 .progress-dot.is-skipped { background: var(--present) !important; opacity: 1; }
 
-/* Botones de navegación tipo “pastilla clara con borde y sombra” */
+/* Fila de botones de navegación */
 .nav-row { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: clamp(10px, 2vw, 16px); }
-.pill-btn {
-  min-height: 44px;
-  padding: 10px 16px;
-  border-radius: 999px;
-  background: rgba(255,255,255,.08); /* claro */
-  border: 1px solid rgba(0,0,0,.25);
-  box-shadow: 0 2px 0 rgba(0,0,0,.35);
-  color: var(--text-color, #fff);
-  transition: background-color .18s, border-color .18s, box-shadow .18s, transform .18s;
-}
-.pill-btn:hover:not(:disabled) { transform: translateY(-1px); }
-.pill-btn:disabled { opacity: .5; }
 
 /* Emoji del TopBar: sólo contorno circular, sin caja de fondo */
 .icon-btn {
@@ -461,7 +451,7 @@ button:disabled {
   50%{ transform: translateX(2px) } 75%{ transform: translateX(-2px) } 100%{ transform: translateX(0) }
 }
 @media (prefers-reduced-motion: reduce) {
-  .option-btn, .pill-btn { transition: none; }
+  .option-btn { transition: none; }
   .option-btn.is-correct, .option-btn.is-incorrect { animation: none; }
 }
 
