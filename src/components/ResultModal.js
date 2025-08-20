@@ -7,7 +7,7 @@ export default function ResultModal({ score, onRestart }) {
         <div className="result-emoji" aria-hidden="true">🏁</div>
         <h2>Resultado</h2>
         <p className="result-score">{score}/10</p>
-        <button className="restart-btn nav-btn" onClick={onRestart} autoFocus>
+        <button className="option-btn restart-btn" onClick={onRestart} autoFocus>
           Reiniciar
         </button>
       </div>
